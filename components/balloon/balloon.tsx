@@ -375,7 +375,10 @@ class Balloon extends React.Component {
             trOrigin = 'rtlTrOrigin';
         }
 
-        const _offset = [alignMap[align].offset[0] + offset[0], alignMap[align].offset[1] + offset[1]];
+        const _offset = [
+            alignMap[align].offset[0] + offset[0],
+            alignMap[align].offset[1] + offset[1],
+        ];
         const transformOrigin = alignMap[align][trOrigin];
         const _style = { ...{ transformOrigin }, ...style };
 

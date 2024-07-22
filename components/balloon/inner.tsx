@@ -91,7 +91,13 @@ class BalloonInner extends React.Component {
         });
 
         const closeIcon = (
-            <a role="button" aria-label={locale.close} tabIndex="0" className={`${_prefix}-close`} onClick={onClose}>
+            <a
+                role="button"
+                aria-label={locale.close}
+                tabIndex="0"
+                className={`${_prefix}-close`}
+                onClick={onClose}
+            >
                 <Icon type="close" size="small" />
             </a>
         );

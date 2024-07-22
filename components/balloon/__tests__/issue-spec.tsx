@@ -13,9 +13,9 @@ function wait(duration) {
     });
 }
 
-describe('Balloon issues', function() {
-    describe('https://github.com/alibaba-fusion/next/issues/4137', function() {
-        it('autoAdjust when in the fixed box and followTrigger=true', async function() {
+describe('Balloon issues', function () {
+    describe('https://github.com/alibaba-fusion/next/issues/4137', function () {
+        it('autoAdjust when in the fixed box and followTrigger=true', async function () {
             const rootNode = document.createElement('div');
             document.body.appendChild(rootNode);
             const wrapper = mount(
@@ -29,8 +29,8 @@ describe('Balloon issues', function() {
                         followTrigger
                         animation={false}
                     >
-                        long overlay content,long overlay content,long overlay content,long overlay content,long overlay
-                        content,long overlay content,long overlay content
+                        long overlay content,long overlay content,long overlay content,long overlay
+                        content,long overlay content,long overlay content,long overlay content
                     </Balloon>
                 </div>,
                 { attachTo: rootNode }
@@ -44,16 +44,17 @@ describe('Balloon issues', function() {
             const rect = overlay.getBoundingClientRect();
             // will adjust into viewport
             assert(rect.left >= 0);
-            assert(rect.top + rect.height + trigger.offsetHeight < document.documentElement.clientHeight);
+            assert(
+                rect.top + rect.height + trigger.offsetHeight <
+                    document.documentElement.clientHeight
+            );
             wrapper.unmount();
             document.body.removeChild(rootNode);
         });
-        it('autoAdjust when in the fixed box and followTrigger=false', async function() {
+        it('autoAdjust when in the fixed box and followTrigger=false', async function () {
             const rootNode = document.createElement('div');
             document.body.appendChild(rootNode);
-            const overlayClassName = `overlay-${Math.random()
-                .toString(36)
-                .slice(2)}`;
+            const overlayClassName = `overlay-${Math.random().toString(36).slice(2)}`;
             const wrapper = mount(
                 <div style={{ position: 'fixed', bottom: 0, left: 10 }}>
                     <Balloon
@@ -65,8 +66,8 @@ describe('Balloon issues', function() {
                         popupClassName={overlayClassName}
                         animation={false}
                     >
-                        long overlay content,long overlay content,long overlay content,long overlay content,long overlay
-                        content,long overlay content,long overlay content
+                        long overlay content,long overlay content,long overlay content,long overlay
+                        content,long overlay content,long overlay content,long overlay content
                     </Balloon>
                 </div>,
                 { attachTo: rootNode }

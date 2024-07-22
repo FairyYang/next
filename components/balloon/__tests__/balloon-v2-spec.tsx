@@ -19,7 +19,7 @@ const delay = time => new Promise(resolve => setTimeout(resolve, time));
 describe('Balloon v2', () => {
     let defaultWrapper = null;
 
-    beforeEach(function() {
+    beforeEach(function () {
         defaultWrapper = mount(
             <Balloon v2 closable={false} type="normal" trigger={defaultTrigger} triggerType="click">
                 i am balloon content
@@ -27,7 +27,7 @@ describe('Balloon v2', () => {
         );
     });
 
-    afterEach(function() {
+    afterEach(function () {
         defaultWrapper.unmount();
         const nodeListArr = [].slice.call(document.querySelectorAll('.next-balloon'));
         nodeListArr.forEach((node, index) => {
@@ -145,7 +145,7 @@ describe('Balloon v2', () => {
 
 describe('balloon v2', () => {
     // 弹窗的关键就是要清理掉遗留的元素
-    afterEach(function() {
+    afterEach(function () {
         const nodeListArr = [].slice.call(document.querySelectorAll('.next-balloon'));
         nodeListArr.forEach((node, index) => {
             node && node.parentNode && node.parentNode.removeChild(node);
@@ -154,7 +154,13 @@ describe('balloon v2', () => {
     it('balloon align', async () => {
         //top
         const wrapperT = mount(
-            <Balloon v2 autoAdjust={false} trigger={<span>trigger</span>} align="t" triggerType="click">
+            <Balloon
+                v2
+                autoAdjust={false}
+                trigger={<span>trigger</span>}
+                align="t"
+                triggerType="click"
+            >
                 i am balloon content
             </Balloon>
         );
@@ -163,7 +169,13 @@ describe('balloon v2', () => {
         assert(document.querySelector('.next-balloon-bottom') !== null);
 
         const wrapperTL = mount(
-            <Balloon v2 autoAdjust={false} trigger={<span>trigger</span>} align="tl" triggerType="click">
+            <Balloon
+                v2
+                autoAdjust={false}
+                trigger={<span>trigger</span>}
+                align="tl"
+                triggerType="click"
+            >
                 i am balloon content
             </Balloon>
         );
@@ -173,7 +185,13 @@ describe('balloon v2', () => {
         assert(document.querySelector('.next-balloon-bottom-left') !== null);
 
         const wrapperTR = mount(
-            <Balloon v2 autoAdjust={false} trigger={<span>trigger</span>} align="tr" triggerType="click">
+            <Balloon
+                v2
+                autoAdjust={false}
+                trigger={<span>trigger</span>}
+                align="tr"
+                triggerType="click"
+            >
                 i am balloon content
             </Balloon>
         );
@@ -184,7 +202,13 @@ describe('balloon v2', () => {
 
         //bottom
         const wrapperB = mount(
-            <Balloon v2 autoAdjust={false} trigger={<span>trigger</span>} align="b" triggerType="click">
+            <Balloon
+                v2
+                autoAdjust={false}
+                trigger={<span>trigger</span>}
+                align="b"
+                triggerType="click"
+            >
                 i am balloon content
             </Balloon>
         );
@@ -194,7 +218,13 @@ describe('balloon v2', () => {
         assert(document.querySelector('.next-balloon-top') !== null);
 
         const wrapperBL = mount(
-            <Balloon v2 autoAdjust={false} trigger={<span>trigger</span>} align="bl" triggerType="click">
+            <Balloon
+                v2
+                autoAdjust={false}
+                trigger={<span>trigger</span>}
+                align="bl"
+                triggerType="click"
+            >
                 i am balloon content
             </Balloon>
         );
@@ -204,7 +234,13 @@ describe('balloon v2', () => {
         assert(document.querySelector('.next-balloon-top-left') !== null);
 
         const wrapperBR = mount(
-            <Balloon v2 autoAdjust={false} trigger={<span>trigger</span>} align="br" triggerType="click">
+            <Balloon
+                v2
+                autoAdjust={false}
+                trigger={<span>trigger</span>}
+                align="br"
+                triggerType="click"
+            >
                 i am balloon content
             </Balloon>
         );
@@ -215,7 +251,13 @@ describe('balloon v2', () => {
 
         //left
         const wrapperL = mount(
-            <Balloon v2 autoAdjust={false} trigger={<span>trigger</span>} align="l" triggerType="click">
+            <Balloon
+                v2
+                autoAdjust={false}
+                trigger={<span>trigger</span>}
+                align="l"
+                triggerType="click"
+            >
                 i am balloon content
             </Balloon>
         );
@@ -225,7 +267,13 @@ describe('balloon v2', () => {
         assert(document.querySelector('.next-balloon-right') !== null);
 
         const wrapperLT = mount(
-            <Balloon v2 autoAdjust={false} trigger={<span>trigger</span>} align="lt" triggerType="click">
+            <Balloon
+                v2
+                autoAdjust={false}
+                trigger={<span>trigger</span>}
+                align="lt"
+                triggerType="click"
+            >
                 i am balloon content
             </Balloon>
         );
@@ -234,7 +282,13 @@ describe('balloon v2', () => {
 
         assert(document.querySelector('.next-balloon-right-top') !== null);
         const wrapperLB = mount(
-            <Balloon v2 autoAdjust={false} trigger={<span>trigger</span>} align="lb" triggerType="click">
+            <Balloon
+                v2
+                autoAdjust={false}
+                trigger={<span>trigger</span>}
+                align="lb"
+                triggerType="click"
+            >
                 i am balloon content
             </Balloon>
         );
@@ -244,7 +298,13 @@ describe('balloon v2', () => {
         assert(document.querySelector('.next-balloon-right-bottom') !== null);
         //right
         const wrapperR = mount(
-            <Balloon v2 autoAdjust={false} trigger={<span>trigger</span>} align="r" triggerType="click">
+            <Balloon
+                v2
+                autoAdjust={false}
+                trigger={<span>trigger</span>}
+                align="r"
+                triggerType="click"
+            >
                 i am balloon content
             </Balloon>
         );
@@ -254,7 +314,13 @@ describe('balloon v2', () => {
         assert(document.querySelector('.next-balloon-left') !== null);
 
         const wrapperRT = mount(
-            <Balloon v2 autoAdjust={false} trigger={<span>trigger</span>} align="rt" triggerType="click">
+            <Balloon
+                v2
+                autoAdjust={false}
+                trigger={<span>trigger</span>}
+                align="rt"
+                triggerType="click"
+            >
                 i am balloon content
             </Balloon>
         );
@@ -263,7 +329,13 @@ describe('balloon v2', () => {
 
         assert(document.querySelector('.next-balloon-left-top') !== null);
         const wrapperRB = mount(
-            <Balloon v2 autoAdjust={false} trigger={<span>trigger</span>} align="rb" triggerType="click">
+            <Balloon
+                v2
+                autoAdjust={false}
+                trigger={<span>trigger</span>}
+                align="rb"
+                triggerType="click"
+            >
                 i am balloon content
             </Balloon>
         );
@@ -275,7 +347,13 @@ describe('balloon v2', () => {
     it('onClose shuld be called with closeIcon', async () => {
         const onClose = snion.spy();
         const wrapper = mount(
-            <Balloon v2 trigger={<button>trigger</button>} align="rb" triggerType="click" onClose={onClose}>
+            <Balloon
+                v2
+                trigger={<button>trigger</button>}
+                align="rb"
+                triggerType="click"
+                onClose={onClose}
+            >
                 i am balloon content
             </Balloon>
         );

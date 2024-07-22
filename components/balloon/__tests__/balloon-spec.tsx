@@ -18,7 +18,7 @@ const delay = time => new Promise(resolve => setTimeout(resolve, time));
 describe('Balloon', () => {
     let defaultWrapper = null;
 
-    beforeEach(function() {
+    beforeEach(function () {
         defaultWrapper = mount(
             <Balloon closable={false} type="normal" trigger={defaultTrigger} triggerType="click">
                 i am balloon content
@@ -26,7 +26,7 @@ describe('Balloon', () => {
         );
     });
 
-    afterEach(function() {
+    afterEach(function () {
         defaultWrapper.unmount();
     });
 
@@ -325,7 +325,13 @@ describe('Balloon onClose ComponentWillReceiveProps closeIcon', () => {
 describe('balloon delay', () => {
     it('add mouseEnterDelay and mouseLeaveDelay, with higher priority than delay.', async () => {
         const wrapper = mount(
-            <Balloon trigger={<div>trigger1111111</div>} delay={500} mouseEnterDelay={1000} mouseLeaveDelay={1000} triggerType="hover">
+            <Balloon
+                trigger={<div>trigger1111111</div>}
+                delay={500}
+                mouseEnterDelay={1000}
+                mouseLeaveDelay={1000}
+                triggerType="hover"
+            >
                 trigger
             </Balloon>
         );
@@ -344,6 +350,5 @@ describe('balloon delay', () => {
 
         await delay(1000);
         assert(document.querySelector('.next-balloon') === null);
-
     });
-})
+});

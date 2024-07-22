@@ -31,7 +31,20 @@ export default class Tooltip extends React.Component {
          * 弹出层位置
          * @enumdesc 上, 右, 下, 左, 上左, 上右, 下左, 下右, 左上, 左下, 右上, 右下
          */
-        align: PropTypes.oneOf(['t', 'r', 'b', 'l', 'tl', 'tr', 'bl', 'br', 'lt', 'lb', 'rt', 'rb']),
+        align: PropTypes.oneOf([
+            't',
+            'r',
+            'b',
+            'l',
+            'tl',
+            'tr',
+            'bl',
+            'br',
+            'lt',
+            'lb',
+            'rt',
+            'rb',
+        ]),
         /**
          * 触发元素
          */
@@ -108,7 +121,12 @@ export default class Tooltip extends React.Component {
     }
 
     static getDerivedStateFromProps(nextProps, prevState) {
-        if (nextProps.v2 && !prevState.innerAlign && 'align' in nextProps && nextProps.align !== prevState.align) {
+        if (
+            nextProps.v2 &&
+            !prevState.innerAlign &&
+            'align' in nextProps &&
+            nextProps.align !== prevState.align
+        ) {
             return {
                 align: nextProps.align,
                 innerAlign: false,

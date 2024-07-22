@@ -16,28 +16,33 @@ const trigger = (
         xiachi
     </span>
 );
-const delay = time => new Promise(resolve => setTimeout(resolve, time));
-
-describe('Tooltip', () => {
+describe('Tooltip v2', () => {
     let defaultWrapper = {};
 
-    beforeEach(function() {
+    beforeEach(function () {
         defaultWrapper = mount(
-            <Tooltip trigger={trigger} triggetType="hover">
+            <Tooltip v2 trigger={trigger} triggetType="hover">
                 i am tooltip content
             </Tooltip>
         );
     });
-    afterEach(function() {
+    afterEach(function () {
         defaultWrapper.unmount();
         const nodeListArr = [].slice.call(document.querySelectorAll('.next-balloon-tooltip'));
         nodeListArr.forEach((node, index) => {
             node.parentNode.removeChild(node);
         });
     });
+    after(function () {
+        const nodeListArr = [].slice.call(document.querySelectorAll('.next-overlay-wrapper'));
+        nodeListArr.forEach((node, index) => {
+            node.parentNode.removeChild(node);
+        });
+    });
+
     // trigger不传,默认用空的<span></span>填充
     it('trigger default is span', () => {
-        const wrapper = mount(<Tooltip>test</Tooltip>);
+        const wrapper = mount(<Tooltip v2>test</Tooltip>);
         // console.log(wrapper.debug());
         assert(wrapper.find('span').length === 1);
     });
@@ -72,19 +77,13 @@ describe('Tooltip', () => {
             ),
         });
         // hover on the <span> which is specially added for disabled pattern
-        defaultWrapper
-            .find('span')
-            .at(0)
-            .simulate('mouseenter');
-        setTimeout(function() {
+        defaultWrapper.find('span').at(0).simulate('mouseenter');
+        setTimeout(function () {
             assert(document.querySelector('.next-balloon-tooltip') !== null);
 
-            defaultWrapper
-                .find('span')
-                .at(0)
-                .simulate('mouseleave');
+            defaultWrapper.find('span').at(0).simulate('mouseleave');
 
-            setTimeout(function() {
+            setTimeout(function () {
                 assert(document.querySelector('.next-balloon-tooltip') === null);
                 done();
             }, 600);
@@ -96,29 +95,9 @@ describe('Tooltip', () => {
             trigger: 'trigger',
         });
         defaultWrapper.find('span').simulate('mouseenter');
-        setTimeout(function() {
+        setTimeout(function () {
             assert(document.querySelector('.next-balloon-tooltip') !== null);
             done();
         }, 300);
-    });
-
-    it('add mouseEnterDelay and mouseLeaveDelay, with higher priority than delay.', async () => {
-        const wrapper = mount(<Tooltip trigger={<div>trigger1111111</div>} delay={500} mouseEnterDelay={1000} mouseLeaveDelay={1000}>test</Tooltip>);
-
-        wrapper.find('div').simulate('mouseenter');
-
-        await delay(500);
-        assert(document.querySelector('.next-balloon-tooltip') === null);
-
-        await delay(550);
-        assert(document.querySelector('.next-balloon-tooltip') !== null);
-
-        wrapper.find('div').simulate('mouseleave');
-
-        await delay(500);
-        assert(document.querySelector('.next-balloon-tooltip') !== null);
-
-        await delay(1000);
-        assert(document.querySelector('.next-balloon-tooltip') === null);
     });
 });
