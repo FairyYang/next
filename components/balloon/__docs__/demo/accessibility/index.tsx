@@ -2,7 +2,6 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 
 import { Button, Balloon, Input } from '@alifd/next';
-import moment from 'moment';
 
 const { Tooltip } = Balloon;
 const innerButton = <Button className="btrigger">Fill in form</Button>;

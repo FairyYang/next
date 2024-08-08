@@ -74,6 +74,7 @@ export const test = function (selector: ElementContext, options: A11yTestOptions
                 console.error(formatViolations(results.violations));
             }
 
+            console.log('violations', results.violations);
             assert(results.violations.length === 0);
 
             if (options.incomplete) {

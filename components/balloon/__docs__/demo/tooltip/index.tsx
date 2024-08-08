@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { ReactNode } from 'react';
 import ReactDOM from 'react-dom';
 import { Button, Balloon, Table } from '@alifd/next';
 
@@ -16,7 +16,7 @@ const dataSource = [
         id: 100360941,
     },
 ];
-const render = (value, index, record) => {
+const render = (value: ReactNode) => {
     const intro = (
         <div style={{ overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
             {value}

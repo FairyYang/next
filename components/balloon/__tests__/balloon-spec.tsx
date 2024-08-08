@@ -1,11 +1,6 @@
 import React from 'react';
-import Enzyme, { mount } from 'enzyme';
-import Adapter from 'enzyme-adapter-react-16';
-import assert from 'power-assert';
 import Button from '../../button';
 import Balloon from '../index';
-
-Enzyme.configure({ adapter: new Adapter() });
 
 const defaultTrigger = (
     <span className="triggerSpan" style={{ margin: '5px' }}>
@@ -13,44 +8,42 @@ const defaultTrigger = (
     </span>
 );
 
-const delay = time => new Promise(resolve => setTimeout(resolve, time));
-
 describe('Balloon', () => {
-    let defaultWrapper = null;
-
-    beforeEach(function () {
-        defaultWrapper = mount(
-            <Balloon closable={false} type="normal" trigger={defaultTrigger} triggerType="click">
-                i am balloon content
-            </Balloon>
-        );
-    });
-
-    afterEach(function () {
-        defaultWrapper.unmount();
-    });
-
     describe('closable', () => {
         it('closable: true', () => {
-            defaultWrapper.setProps({
-                visible: true,
-                closable: true,
-            });
-            assert(document.querySelector('.next-balloon-close') !== null);
+            cy.mount(
+                <Balloon
+                    visible
+                    closable
+                    type="normal"
+                    trigger={defaultTrigger}
+                    triggerType="click"
+                >
+                    i am balloon content
+                </Balloon>
+            );
+            cy.get('.next-balloon-close').should('exist');
         });
 
         it('closable: false', () => {
-            defaultWrapper.setProps({
-                visible: true,
-                closable: false,
-            });
-            assert(document.querySelector('.next-balloon-close') === null);
+            cy.mount(
+                <Balloon
+                    visible
+                    closable={false}
+                    type="normal"
+                    trigger={defaultTrigger}
+                    triggerType="click"
+                >
+                    i am balloon content
+                </Balloon>
+            );
+            cy.get('.next-balloon-close').should('not.exist');
         });
     });
 
     describe('safeNode', () => {
         it('safeNode', () => {
-            function Demo(props) {
+            function Demo() {
                 return (
                     <div>
                         <button id="safe" className="safeButton">
@@ -67,51 +60,88 @@ describe('Balloon', () => {
                     </div>
                 );
             }
-            const wrapper = mount(<Demo />);
-            wrapper.find('.balloon').simulate('click');
-            wrapper.find('.safeButton').simulate('click');
-            assert(document.querySelector('.next-balloon') !== null);
+            cy.mount(<Demo />);
+            cy.get('.balloon').trigger('click');
+            cy.get('.safeButton').trigger('click');
+            cy.get('.next-balloon').should('exist');
         });
     });
     describe('type', () => {
         it('type: normal', () => {
-            defaultWrapper.setProps({
-                type: 'normal',
-                visible: true,
-            });
-            assert(document.querySelector('.next-balloon-normal') !== null);
+            cy.mount(
+                <Balloon
+                    visible
+                    closable={false}
+                    type="normal"
+                    trigger={defaultTrigger}
+                    triggerType="click"
+                >
+                    i am balloon content
+                </Balloon>
+            );
+            cy.get('.next-balloon-normal').should('exist');
         });
         it('type: primary', () => {
-            defaultWrapper.setProps({
-                type: 'primary',
-                visible: true,
-            });
-            assert(document.querySelector('.next-balloon-primary') !== null);
+            cy.mount(
+                <Balloon
+                    visible
+                    closable={false}
+                    type="primary"
+                    trigger={defaultTrigger}
+                    triggerType="click"
+                >
+                    i am balloon content
+                </Balloon>
+            );
+            cy.get('.next-balloon-primary').should('exist');
         });
     });
     describe('trigger ,triggerType', () => {
         it('should has the trigger element', () => {
-            assert(defaultWrapper.find('.triggerSpan').text() === 'trigger');
+            cy.mount(
+                <Balloon
+                    closable={false}
+                    type="normal"
+                    trigger={defaultTrigger}
+                    triggerType="click"
+                >
+                    i am balloon content
+                </Balloon>
+            );
+
+            cy.get('.triggerSpan').should('have.text', 'trigger');
         });
         it('triggerType can set click', () => {
-            defaultWrapper.setProps({
-                triggerType: 'click',
-            });
-            defaultWrapper.find('span').simulate('click');
-            assert(document.querySelector('.next-balloon') !== null);
+            cy.mount(
+                <Balloon
+                    closable={false}
+                    type="normal"
+                    trigger={defaultTrigger}
+                    triggerType="click"
+                >
+                    i am balloon content
+                </Balloon>
+            );
+            cy.get('span').trigger('click');
+            cy.get('.next-balloon').should('exist');
         });
 
-        //此处异步验证
-        it('triggerType can set hover', async () => {
-            defaultWrapper.setProps({
-                triggerType: 'hover',
-            });
-            defaultWrapper.find('span').simulate('mouseenter');
-            await delay(500);
-            assert(document.querySelector('.next-balloon') !== null);
+        it('triggerType can set hover', () => {
+            cy.mount(
+                <Balloon
+                    closable={false}
+                    type="normal"
+                    trigger={defaultTrigger}
+                    triggerType="hover"
+                >
+                    i am balloon content
+                </Balloon>
+            );
+            cy.get('span').trigger('mouseenter');
+            cy.get('.next-balloon').should('exist');
         });
 
-        // it('trigger is disabled button, hover enter and leave, popup should resolve', async () => {
+        // it('trigger is disabled button, hover enter and leave, popup should resolve',  () => {
         //     defaultWrapper.setProps({
         //         trigger: (
         //             <Button disabled id="balloon-btn" style={{ color: 'red' }}>
@@ -132,132 +162,132 @@ describe('Balloon', () => {
         //     assert(document.querySelector('.next-balloon') === null);
         // });
 
-        it('trigger can be string', async () => {
-            defaultWrapper.setProps({
-                trigger: 'trigger',
-                triggerType: 'hover',
-            });
-            defaultWrapper.find('span').simulate('mouseenter');
-            await delay(300);
-            assert(document.querySelector('.next-balloon') !== null);
+        it('trigger can be string', () => {
+            cy.mount(
+                <Balloon closable={false} type="normal" trigger="trigger" triggerType="hover">
+                    i am balloon content
+                </Balloon>
+            );
+            cy.get('span').trigger('mouseenter');
+            cy.get('.next-balloon').should('exist');
         });
 
-        // trigger不传,默认用空的<span></span>填充
+        // trigger 不传，默认用空的<span></span>填充
         it('trigger default is span', () => {
-            const wrapper = mount(<Balloon triggerType="click">trigger</Balloon>);
-            assert(wrapper.find('span').length === 1);
+            cy.mount(<Balloon triggerType="click">trigger</Balloon>);
+            cy.get('span').should('have.length', 1);
         });
     });
 
     describe('align', () => {
         it('balloon align', () => {
-            //top
-            const wrapperT = mount(
+            cy.mount(
                 <Balloon trigger={<span>trigger</span>} align="t" triggerType="click">
                     i am balloon content
                 </Balloon>
             );
-            wrapperT.find('span').simulate('click');
-            assert(document.querySelector('.next-balloon-bottom') !== null);
+            cy.get('span').trigger('click');
+            cy.get('.next-balloon-bottom').should('exist');
 
-            const wrapperTL = mount(
+            cy.mount(
                 <Balloon trigger={<span>trigger</span>} align="tl" triggerType="click">
                     i am balloon content
                 </Balloon>
             );
-            wrapperTL.find('span').simulate('click');
-            assert(document.querySelector('.next-balloon-bottom-right') !== null);
+            cy.get('span').trigger('click');
+            cy.get('.next-balloon-bottom-right').should('exist');
 
-            const wrapperTR = mount(
+            cy.mount(
                 <Balloon trigger={<span>trigger</span>} align="tr" triggerType="click">
                     i am balloon content
                 </Balloon>
             );
-            wrapperTR.find('span').simulate('click');
-            assert(document.querySelector('.next-balloon-bottom-left') !== null);
+            cy.get('span').trigger('click');
+            cy.get('.next-balloon-bottom-left').should('exist');
 
             //bottom
-            const wrapperB = mount(
+            cy.mount(
                 <Balloon trigger={<span>trigger</span>} align="b" triggerType="click">
                     i am balloon content
                 </Balloon>
             );
-            wrapperB.find('span').simulate('click');
-            assert(document.querySelector('.next-balloon-top') !== null);
+            cy.get('span').trigger('click');
+            cy.get('.next-balloon-top').should('exist');
 
-            const wrapperBL = mount(
+            cy.mount(
                 <Balloon trigger={<span>trigger</span>} align="bl" triggerType="click">
                     i am balloon content
                 </Balloon>
             );
-            wrapperBL.find('span').simulate('click');
-            assert(document.querySelector('.next-balloon-top-right') !== null);
+            cy.get('span').trigger('click');
+            cy.get('.next-balloon-top-right').should('exist');
 
-            const wrapperBR = mount(
+            cy.mount(
                 <Balloon trigger={<span>trigger</span>} align="br" triggerType="click">
                     i am balloon content
                 </Balloon>
             );
-            wrapperBR.find('span').simulate('click');
-            assert(document.querySelector('.next-balloon-top-left') !== null);
+            cy.get('span').trigger('click');
+            cy.get('.next-balloon-top-left').should('exist');
 
             //left
-            const wrapperL = mount(
+            cy.mount(
                 <Balloon trigger={<span>trigger</span>} align="l" triggerType="click">
                     i am balloon content
                 </Balloon>
             );
-            wrapperL.find('span').simulate('click');
-            assert(document.querySelector('.next-balloon-right') !== null);
+            cy.get('span').trigger('click');
+            cy.get('.next-balloon-right').should('exist');
 
-            const wrapperLT = mount(
+            cy.mount(
                 <Balloon trigger={<span>trigger</span>} align="lt" triggerType="click">
                     i am balloon content
                 </Balloon>
             );
-            wrapperLT.find('span').simulate('click');
-            assert(document.querySelector('.next-balloon-right-bottom') !== null);
-            const wrapperLB = mount(
+            cy.get('span').trigger('click');
+            cy.get('.next-balloon-right-bottom').should('exist');
+
+            cy.mount(
                 <Balloon trigger={<span>trigger</span>} align="lb" triggerType="click">
                     i am balloon content
                 </Balloon>
             );
-            wrapperLB.find('span').simulate('click');
-            assert(document.querySelector('.next-balloon-right-top') !== null);
+            cy.get('span').trigger('click');
+            cy.get('.next-balloon-right-top').should('exist');
+
             //right
-            const wrapperR = mount(
+            cy.mount(
                 <Balloon trigger={<span>trigger</span>} align="r" triggerType="click">
                     i am balloon content
                 </Balloon>
             );
-            wrapperR.find('span').simulate('click');
-            assert(document.querySelector('.next-balloon-left') !== null);
+            cy.get('span').trigger('click');
+            cy.get('.next-balloon-left').should('exist');
 
-            const wrapperRT = mount(
+            cy.mount(
                 <Balloon trigger={<span>trigger</span>} align="rt" triggerType="click">
                     i am balloon content
                 </Balloon>
             );
-            wrapperRT.find('span').simulate('click');
-            assert(document.querySelector('.next-balloon-left-bottom') !== null);
-            const wrapperRB = mount(
+            cy.get('span').trigger('click');
+            cy.get('.next-balloon-left-bottom').should('exist');
+
+            cy.mount(
                 <Balloon trigger={<span>trigger</span>} align="rb" triggerType="click">
                     i am balloon content
                 </Balloon>
             );
-            wrapperRB.find('span').simulate('click');
-            assert(document.querySelector('.next-balloon-left-top') !== null);
+            cy.get('span').trigger('click');
+            cy.get('.next-balloon-left-top').should('exist');
         });
     });
 });
 
 describe('Balloon onClose ComponentWillReceiveProps closeIcon', () => {
-    it('onClose ComponentWillReceiveProps closeIcon', async () => {
-        //function afterCloseCallback(e){//afterClose无法测
-        //    time++;
-        //}
-        class App extends React.Component {
-            constructor(props) {
+    it('onClose ComponentWillReceiveProps closeIcon', () => {
+        interface AppProps {}
+        class App extends React.Component<AppProps, { visible: boolean }> {
+            constructor(props: AppProps) {
                 super(props);
                 this.state = {
                     visible: false,
@@ -269,7 +299,7 @@ describe('Balloon onClose ComponentWillReceiveProps closeIcon', () => {
                     visible: false,
                 });
             }
-            handleVisibleChange(visible) {
+            handleVisibleChange(visible: boolean) {
                 this.setState({ visible });
             }
 
@@ -312,19 +342,17 @@ describe('Balloon onClose ComponentWillReceiveProps closeIcon', () => {
                 );
             }
         }
-        const wrapper = mount(<App />);
-        // console.log(wrapper.find('.trigger-btn').debug());
-        wrapper.find('button').simulate('click');
-        assert(document.querySelectorAll('.next-balloon') !== null);
-        document.querySelector('.next-balloon-close').click();
-        await delay(1000);
-        assert(document.querySelector('.next-balloon') === null);
+        cy.mount(<App />);
+        cy.get('button').trigger('click');
+        cy.get('.next-balloon').should('exist');
+        cy.get('.next-balloon-close').trigger('click');
+        cy.get('.next-balloon').should('not.exist');
     });
 });
 
 describe('balloon delay', () => {
-    it('add mouseEnterDelay and mouseLeaveDelay, with higher priority than delay.', async () => {
-        const wrapper = mount(
+    it('add mouseEnterDelay and mouseLeaveDelay, with higher priority than delay.', () => {
+        cy.mount(
             <Balloon
                 trigger={<div>trigger1111111</div>}
                 delay={500}
@@ -336,19 +364,20 @@ describe('balloon delay', () => {
             </Balloon>
         );
 
-        wrapper.find('div').simulate('mouseenter');
-        await delay(500);
-        assert(document.querySelector('.next-balloon') === null);
+        cy.get('div').trigger('mouseenter');
 
-        await delay(550);
-        assert(document.querySelector('.next-balloon') !== null);
+        cy.wait(500);
+        cy.get('.next-balloon').should('not.exist');
 
-        wrapper.find('div').simulate('mouseleave');
+        cy.wait(550);
+        cy.get('.next-balloon').should('exist');
 
-        await delay(550);
-        assert(document.querySelector('.next-balloon') !== null);
+        cy.get('div').trigger('mouseleave');
 
-        await delay(1000);
-        assert(document.querySelector('.next-balloon') === null);
+        cy.wait(550);
+        cy.get('.next-balloon').should('exist');
+
+        cy.wait(1000);
+        cy.get('.next-balloon').should('not.exist');
     });
 });

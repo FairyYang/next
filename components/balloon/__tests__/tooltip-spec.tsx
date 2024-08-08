@@ -1,45 +1,18 @@
 import React from 'react';
-import Enzyme, { mount } from 'enzyme';
-import Adapter from 'enzyme-adapter-react-16';
-import assert from 'power-assert';
 import Button from '../../button';
 import Balloon from '../index';
 
-/* eslint-disable react/no-multi-comp */
-
-// import Button from '../../src/button';
-
-Enzyme.configure({ adapter: new Adapter() });
 const Tooltip = Balloon.Tooltip;
 const trigger = (
     <span className="trigger" onMouseEnter={() => {}}>
         xiachi
     </span>
 );
-const delay = time => new Promise(resolve => setTimeout(resolve, time));
-
 describe('Tooltip', () => {
-    let defaultWrapper = {};
-
-    beforeEach(function () {
-        defaultWrapper = mount(
-            <Tooltip trigger={trigger} triggetType="hover">
-                i am tooltip content
-            </Tooltip>
-        );
-    });
-    afterEach(function () {
-        defaultWrapper.unmount();
-        const nodeListArr = [].slice.call(document.querySelectorAll('.next-balloon-tooltip'));
-        nodeListArr.forEach((node, index) => {
-            node.parentNode.removeChild(node);
-        });
-    });
-    // trigger不传,默认用空的<span></span>填充
+    // trigger 不传，默认用空的<span></span>填充
     it('trigger default is span', () => {
-        const wrapper = mount(<Tooltip>test</Tooltip>);
-        // console.log(wrapper.debug());
-        assert(wrapper.find('span').length === 1);
+        cy.mount(<Tooltip>test</Tooltip>);
+        cy.get('span').should('have.length', 1);
     });
 
     // it('tooltip should trigger on hover', (done) => {
@@ -50,56 +23,67 @@ describe('Tooltip', () => {
     //     // }, 500);
     // });
     it('tooltip should have the trigger element', () => {
-        assert(defaultWrapper.find('.trigger').text() === 'xiachi');
+        cy.mount(
+            <Tooltip trigger={trigger} triggerType="hover">
+                i am tooltip content
+            </Tooltip>
+        );
+        cy.get('.trigger').should('have.text', 'xiachi');
     });
 
     it('text not string should throw an error', () => {
         try {
-            defaultWrapper.setProps({
-                text: 2,
-            });
+            cy.mount(
+                // @ts-expect-error 此处需要测试错误传参情况
+                <Tooltip trigger={trigger} text={2} triggerType="hover">
+                    i am tooltip content
+                </Tooltip>
+            );
         } catch (e) {
-            assert(e instanceof Error);
+            expect(e instanceof Error);
         }
     });
 
-    it('trigger is disabled button, hover enter and leave, popup should resolve', done => {
-        defaultWrapper.setProps({
-            trigger: (
-                <Button disabled id="balloon-btn" style={{ color: 'red', display: 'inline' }}>
-                    button
-                </Button>
-            ),
-        });
-        // hover on the <span> which is specially added for disabled pattern
-        defaultWrapper.find('span').at(0).simulate('mouseenter');
+    it('trigger is disabled button, hover enter and leave, popup should resolve', () => {
+        cy.mount(
+            <Tooltip
+                trigger={
+                    <Button disabled id="balloon-btn" style={{ color: 'red', display: 'inline' }}>
+                        button
+                    </Button>
+                }
+                triggerType="hover"
+            >
+                i am tooltip content
+            </Tooltip>
+        );
+        cy.get('span').trigger('mouseenter');
         setTimeout(function () {
-            assert(document.querySelector('.next-balloon-tooltip') !== null);
-
-            defaultWrapper.find('span').at(0).simulate('mouseleave');
+            cy.get('.next-balloon-tooltip').should('exist');
+            cy.get('span').trigger('mouseleave');
 
             setTimeout(function () {
-                assert(document.querySelector('.next-balloon-tooltip') === null);
-                done();
+                cy.get('.next-balloon-tooltip').should('not.exist');
             }, 600);
         }, 300);
     });
 
-    it('trigger can be string', done => {
-        defaultWrapper.setProps({
-            trigger: 'trigger',
-        });
-        defaultWrapper.find('span').simulate('mouseenter');
+    it('trigger can be string', () => {
+        cy.mount(
+            <Tooltip trigger="trigger" triggerType="hover">
+                i am tooltip content
+            </Tooltip>
+        );
+        cy.get('span').trigger('mouseenter');
         setTimeout(function () {
-            assert(document.querySelector('.next-balloon-tooltip') !== null);
-            done();
+            cy.get('.next-balloon-tooltip').should('exist');
         }, 300);
     });
 
-    it('add mouseEnterDelay and mouseLeaveDelay, with higher priority than delay.', async () => {
-        const wrapper = mount(
+    it('add mouseEnterDelay and mouseLeaveDelay, with higher priority than delay.', () => {
+        cy.mount(
             <Tooltip
-                trigger={<div>trigger1111111</div>}
+                trigger={<div className="trigger">trigger1111111</div>}
                 delay={500}
                 mouseEnterDelay={1000}
                 mouseLeaveDelay={1000}
@@ -107,21 +91,20 @@ describe('Tooltip', () => {
                 test
             </Tooltip>
         );
+        cy.get('.trigger').trigger('mouseenter');
+        setTimeout(function () {
+            cy.get('.next-balloon-tooltip').should('not.exist');
+        }, 500);
+        setTimeout(function () {
+            cy.get('.next-balloon-tooltip').should('exist');
+        }, 550);
 
-        wrapper.find('div').simulate('mouseenter');
-
-        await delay(500);
-        assert(document.querySelector('.next-balloon-tooltip') === null);
-
-        await delay(550);
-        assert(document.querySelector('.next-balloon-tooltip') !== null);
-
-        wrapper.find('div').simulate('mouseleave');
-
-        await delay(500);
-        assert(document.querySelector('.next-balloon-tooltip') !== null);
-
-        await delay(1000);
-        assert(document.querySelector('.next-balloon-tooltip') === null);
+        cy.get('.trigger').trigger('mouseleave');
+        setTimeout(function () {
+            cy.get('.next-balloon-tooltip').should('exist');
+        }, 500);
+        setTimeout(function () {
+            cy.get('.next-balloon-tooltip').should('not.exist');
+        }, 1000);
     });
 });

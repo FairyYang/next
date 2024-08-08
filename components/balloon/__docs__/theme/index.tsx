@@ -3,11 +3,23 @@ import { Demo, DemoGroup, initDemo } from '../../../demo-helper';
 import Balloon from '../../index';
 import '../../style';
 import '../../../icon/style';
+import React, { Component } from 'react';
+import { AlignEnum } from '../../types';
+import ReactDOM from 'react-dom';
 
-const i18nMap = {
+const i18nMap: Record<
+    string,
+    {
+        title: string;
+        tooltipContent: string;
+        balloonContent: string;
+        align: AlignRecord;
+        closable: ClosableItem;
+    }
+> = {
     'zh-cn': {
         title: '气泡弹层',
-        tooltipContent: '提示浮层内可替换内容.',
+        tooltipContent: '提示浮层内可替换内容。',
         balloonContent: '气泡浮层内可替换内容',
         align: {
             label: '箭头方向',
@@ -81,8 +93,31 @@ const i18nMap = {
     },
 };
 
-class BalloonDemo extends React.Component {
-    constructor(props) {
+type AlignRecord = {
+    label: string;
+    value: AlignEnum;
+    enum: Array<{ label: string; value: AlignEnum }>;
+};
+
+type ClosableItem = {
+    label: string;
+    value: string;
+    enum: Array<{ label: string; value: string }>;
+};
+interface BalloonDemoProps {
+    content: string;
+    align: AlignRecord;
+    closable: ClosableItem;
+}
+
+interface BalloonDemoState {
+    demoFunction: {
+        align: AlignRecord;
+        closable: ClosableItem;
+    };
+}
+class BalloonDemo extends Component<BalloonDemoProps, BalloonDemoState> {
+    constructor(props: BalloonDemoProps) {
         super(props);
         this.state = {
             demoFunction: {
@@ -124,7 +159,7 @@ class BalloonDemo extends React.Component {
         this.onFunctionChange = this.onFunctionChange.bind(this);
     }
 
-    componentWillReceiveProps(nextProps) {
+    componentWillReceiveProps(nextProps: BalloonDemoProps) {
         this.setState({
             demoFunction: {
                 align: {
@@ -139,7 +174,7 @@ class BalloonDemo extends React.Component {
         });
     }
 
-    onFunctionChange(demoFunction) {
+    onFunctionChange(demoFunction: { align: AlignRecord; closable: ClosableItem }) {
         this.setState({
             demoFunction,
         });
@@ -201,9 +236,19 @@ class BalloonDemo extends React.Component {
         );
     }
 }
+interface TooltipDemoProps {
+    content: string;
+    align: AlignRecord;
+    closable?: ClosableItem;
+}
 
-class TooltipDemo extends React.Component {
-    constructor(props) {
+interface TooltipDemoState {
+    demoFunction: {
+        align: AlignRecord;
+    };
+}
+class TooltipDemo extends React.Component<TooltipDemoProps, TooltipDemoState> {
+    constructor(props: TooltipDemoProps) {
         super(props);
         this.state = {
             demoFunction: {
@@ -223,7 +268,10 @@ class TooltipDemo extends React.Component {
                         { label: '左下', value: 'rt' },
                         { label: '右上', value: 'lb' },
                         { label: '右下', value: 'lt' },
-                    ].slice(0, 8),
+                    ].slice(0, 8) as {
+                        label: string;
+                        value: AlignEnum;
+                    }[],
                 },
             },
         };
@@ -231,7 +279,7 @@ class TooltipDemo extends React.Component {
         this.onFunctionChange = this.onFunctionChange.bind(this);
     }
 
-    componentWillReceiveProps(nextProps) {
+    componentWillReceiveProps(nextProps: TooltipDemoProps) {
         this.setState({
             demoFunction: {
                 align: {
@@ -242,7 +290,7 @@ class TooltipDemo extends React.Component {
         });
     }
 
-    onFunctionChange(demoFunction) {
+    onFunctionChange(demoFunction: TooltipDemoState['demoFunction']) {
         this.setState({
             demoFunction,
         });
@@ -277,7 +325,13 @@ class TooltipDemo extends React.Component {
     }
 }
 
-function render(i18n) {
+function render(i18n: {
+    title: string;
+    tooltipContent: string;
+    balloonContent: string;
+    align: AlignRecord;
+    closable: ClosableItem;
+}) {
     const tooltipContentText = i18n.tooltipContent;
     const balloonContentText = i18n.balloonContent;
 

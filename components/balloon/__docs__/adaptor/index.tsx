@@ -1,6 +1,7 @@
 import React from 'react';
 import { Balloon } from '@alifd/next';
 import { Types } from '@alifd/adaptor-helper';
+import { AlignEnum } from '../../types';
 
 const ALIGN_LIST = [
     { label: 'Top', value: 'b' }, // (上)
@@ -29,7 +30,7 @@ export default {
             value: 'tooltip',
         },
     ],
-    editor: shape => {
+    editor: (shape: string) => {
         return {
             props: [
                 shape === 'balloon' && {
@@ -60,7 +61,22 @@ export default {
             },
         };
     },
-    adaptor: ({ shape, level, direction, closable, data, style, ...others }) => {
+    adaptor: ({
+        shape,
+        level,
+        direction,
+        closable,
+        data,
+        style,
+        ...others
+    }: {
+        shape: string;
+        level: string;
+        direction: AlignEnum;
+        closable: boolean;
+        data: string;
+        style: React.CSSProperties;
+    }) => {
         return (
             <Balloon.Inner
                 {...others}
@@ -74,7 +90,7 @@ export default {
             </Balloon.Inner>
         );
     },
-    content: shape => ({
+    content: (shape: string) => ({
         options: [
             {
                 name: 'direction',
@@ -87,7 +103,10 @@ export default {
                 default: 'yes',
             },
         ].filter(v => !!v),
-        transform: (props, { direction, closable }) => {
+        transform: (
+            props: any,
+            { direction, closable }: { direction: AlignEnum; closable: string }
+        ) => {
             return {
                 ...props,
                 direction,
